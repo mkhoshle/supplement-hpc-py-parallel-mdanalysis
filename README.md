@@ -15,7 +15,7 @@ and documentation).
 # Installation
 
 Different packages and libraries are used in the present study in order to achieve the desired performance.
-From the libraries given in Table , _MPI4py_, _H5py_, _MDAnalysis_ were the easiest to build. 
+From the libraries used in the present study (given in Table 2 of the manuscript), _MPI4py_, _H5py_, _MDAnalysis_ were the easiest to build. 
 Users are able to get these packages installed through the _Conda_ package manager [Conda](https://conda.io/docs/).
 
 _OpenMPI_, and _GCC_, can be easily configured and installed.
