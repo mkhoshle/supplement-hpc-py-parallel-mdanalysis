@@ -11,6 +11,16 @@ License v3](https://www.gnu.org/licenses/gpl.html) (code) or the
 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (text
 and documentation).
 
+# Requirements
+* Python 2.7 or higher or Python 3.1 or higher 
+* GCC 4.9.4  
+* OpenMPI 1.10.7
+* Global Array 5.6.1
+* MPI4py 3.0.0
+* GA4py 1.0
+* PHDF5 1.10.1
+* H5py 2.7.1
+* MDAnalysis 0.17.0
 
 # Installation
 
@@ -25,3 +35,4 @@ _Global Array_, and _PHDF5_ are harder to install especially because the librari
 _GA4py_ has only one release, and does not provide users with extensive documentation.
 
 We performed our benchmark on several HPC resources and therefore, we had to install all the related packages and tools on all resources. However, there are always differences in the resources because their set up and architectures differ from each other. Detailed instruction for installing all these packages are procided in the present repository.
+
