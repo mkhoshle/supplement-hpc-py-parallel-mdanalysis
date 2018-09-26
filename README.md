@@ -34,5 +34,5 @@ The configure script supports many different command line options, but the suppo
 _Global Array_, and _PHDF5_ are harder to install especially because the libraries are built from source and variable configure options are required to support specific network interconnects and back-end run-time environments.
 _GA4py_ has only one release, and does not provide users with extensive documentation.
 
-We performed our benchmark on several HPC resources and therefore, we had to install all the related packages and tools on all resources. However, there are always differences in the resources because their set up and architectures differ from each other. Detailed instruction for installing all these packages are procided in the present repository.
+We performed our benchmark on several HPC resources and detailed instruction for installing all these packages on different resources are provided.
 
