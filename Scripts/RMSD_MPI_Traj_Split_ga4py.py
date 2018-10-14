@@ -13,14 +13,13 @@ from mpi4py import MPI
 from ga4py import ga
 from ga4py import gain
 
-#---------------------------------------
 #MPI.Init
 ga.initialize()
 comm = gain.comm()
 
 size = ga.nnodes()
 rank = ga.nodeid()
-#------------------------------------------
+
 j = sys.argv[1]
 
 if rank == 0:
@@ -51,12 +50,10 @@ def block_rmsd(index, topology, trajectory, xref0):
     t_comp_final = np.sum(t_comp)
     t_init = start0-start00  
     return results, t_comp_final, t_IO_final, t_all_frame, t_end_loop, t_init
-#---------------------------------------------------------------------------
+
+# Check the files in the directory
 DCD1 = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/1ake_007-nowater-core-dt240ps.dcd')))
 PSF = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/adk4AKE.psf')))
-# Check the files in the directory
-filenames = os.listdir(os.path.join(os.getcwd(),'files'))
-#print (filenames)
 longXTC = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'traj_data_{}'.format(size),'newtraj_{}.xtc'.format(rank))))
 longXTC1 = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/newtraj_{}_{}.xtc'.format(rank,j))))
 longXTC0 = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'traj_data_{}'.format(size),'newtraj_{}.xtc'.format(0))))
@@ -65,11 +62,7 @@ copyfile(longXTC, longXTC1)
 u = mda.Universe(PSF, longXTC1)
 print(len(u.trajectory))
 
-#MPI.Comm.Barrier()
-#ga.sync()
-
 start1 = time.time()
-#----------------------------------------------------------------------
 u = mda.Universe(PSF, longXTC1)
 mobile = u.select_atoms("(resid 1:29 or resid 60:121 or resid 160:214) and name CA")
 index = mobile.indices
@@ -83,7 +76,6 @@ g_a = ga.create(ga.C_DBL, [bsize*size,2], "RMSD")
 buf = np.zeros([bsize*size,2], dtype=float)
 
 # Create each segment for each process
-#for j in range(1,6): # changing files (5 files per block size)
 start2 = time.time()
 
 frames_seg = np.zeros([size,2], dtype=int)
@@ -98,6 +90,7 @@ start, stop = d[rank][0], d[rank][1]
 start3 = time.time()
 out = block_rmsd(index, topology, trajectory, xref0) 
 
+# Communication
 start4 = time.time()
 print(np.shape(out[0]),start, stop)
 ga.put(g_a, out[0], (start,0), (stop,2)) 
@@ -105,9 +98,6 @@ ga.put(g_a, out[0], (start,0), (stop,2))
 start5 = time.time()
 if rank == 0:
    buf = ga.get(g_a, lo=None, hi=None)
-
-
-#buf = ga.access(g_a, lo=None, hi=None)
 
 start6 = time.time()
 
@@ -128,7 +118,8 @@ os.remove('files/newtraj_{}_{}.xtc'.format(rank,j))
 os.remove('files/.newtraj_{}_{}.xtc_offsets.npz'.format(rank,j))
 
 ga.destroy(g_a) 
-#print('Cost Calculation')
+
+# Cost Calculation
 init_time = start2-start1
 comm_time1 = start3-start2
 comm_time2 = start5-start4
