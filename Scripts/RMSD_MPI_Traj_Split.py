@@ -11,7 +11,7 @@ from MDAnalysis import Writer
 import mpi4py
 from mpi4py import MPI
 
-#---------------------------------------
+
 MPI.Init
 
 comm = MPI.COMM_WORLD
@@ -19,7 +19,7 @@ size = comm.Get_size()
 rank = comm.Get_rank()
 if rank == 0:
    print(mda.__version__)
-#------------------------------------------
+
 j = sys.argv[1]
 
 def block_rmsd(index, topology, trajectory, xref0):
@@ -47,12 +47,10 @@ def block_rmsd(index, topology, trajectory, xref0):
     t_comp_final = np.sum(t_comp)
     t_init = start0-start00  
     return results, t_comp_final, t_IO_final, t_all_frame, t_end_loop, t_init
-#---------------------------------------------------------------------------
+
+# Check the files in the directory
 DCD1 = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/1ake_007-nowater-core-dt240ps.dcd')))
 PSF = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/adk4AKE.psf')))
-# Check the files in the directory
-filenames = os.listdir(os.path.join(os.getcwd(),'files'))
-#print (filenames)
 longXTC = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'traj_data_{}'.format(size),'newtraj_{}.xtc'.format(rank))))
 longXTC1 = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/newtraj_{}_{}.xtc'.format(rank,j))))
 longXTC0 = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'traj_data_{}'.format(size),'newtraj_{}.xtc'.format(0))))
@@ -61,9 +59,7 @@ copyfile(longXTC, longXTC1)
 u = mda.Universe(PSF, longXTC1)
 print(len(u.trajectory))
 
-
 start1 = time.time()
-#----------------------------------------------------------------------
 u = mda.Universe(PSF, longXTC1)
 mobile = u.select_atoms("(resid 1:29 or resid 60:121 or resid 160:214) and name CA")
 index = mobile.indices
@@ -75,7 +71,6 @@ xref0 = ref0.positions-ref0.center_of_mass()
 bsize = int(np.ceil(mobile.universe.trajectory.n_frames))
 
 # Create each segment for each process
-#for j in range(1,6): # changing files (5 files per block size)
 start2 = time.time()
 
 frames_seg = np.zeros([size,2], dtype=int)
@@ -90,6 +85,7 @@ start, stop = d[rank][0], d[rank][1]
 start3 = time.time()
 out = block_rmsd(index, topology, trajectory, xref0) 
 
+# Communication
 start4 = time.time()
 if rank == 0:
    data1 = np.zeros([size*bsize,2], dtype=float)
@@ -115,7 +111,7 @@ if rank == 0 and int(j) == 1:
 os.remove('files/newtraj_{}_{}.xtc'.format(rank,j))
 os.remove('files/.newtraj_{}_{}.xtc_offsets.npz'.format(rank,j))
 
-#print('Cost Calculation')
+# Cost Calculation
 init_time = start2-start1
 comm_time1 = start3-start2
 comm_time2 = start5-start4
