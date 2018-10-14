@@ -12,7 +12,6 @@ import mpi4py
 from mpi4py import MPI
 import h5py 
 
-#---------------------------------------
 MPI.Init
 
 comm = MPI.COMM_WORLD
@@ -21,7 +20,6 @@ rank = comm.Get_rank()
 if rank == 0:
    print (mda.__version__)
 
-#---------------------------------------
 j = sys.argv[1]
 
 def block_rmsd(dset, xref0, start=None, stop=None, step=None):
@@ -52,7 +50,6 @@ def block_rmsd(dset, xref0, start=None, stop=None, step=None):
     t_init = start0-start00
     return results, t_comp_final, t_IO_final, t_all_frame, t_end_loop, t_init
 
-#-----------------------------------------
 PSF = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'files/adk4AKE.psf')))
 filenames = os.listdir(os.path.join(os.getcwd(),'files'))
 longXTC = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'newtraj.xtc')))
@@ -67,7 +64,6 @@ if rank == 0:
 MPI.COMM_WORLD.Barrier()
 
 start1 = time.time()
-#----------------------------------------------------------------------
 u = mda.Universe(PSF, longXTC)
 mobile = u.select_atoms("(resid 1:29 or resid 60:121 or resid 160:214) and name CA")
 index = mobile.indices
@@ -80,7 +76,6 @@ f.atomic = False
 dset = f.require_dataset('pos',(2512208,len(mobile.atoms)*3),dtype='f')
 
 # Create each segment for each process
-#for j in range(1,6): # changing files (5 files per block size)
 start2 = time.time()
 
 frames_seg = np.zeros([size,2], dtype=int)
@@ -99,6 +94,7 @@ out = block_rmsd(dset, xref0, start=start, stop=stop, step=1)
 start4 = time.time()
 f.close()
 
+# Communication
 start5 = time.time()
 if rank == 0:
    data1 = np.zeros([size*bsize,2], dtype=float)
@@ -121,7 +117,7 @@ if rank == 0 and int(j) == 1:
    res = os.path.abspath(os.path.normpath(os.path.join(os.getcwd(),'RMSD_{}.csv'.format(size))))
    np.save(res, data1)
 
-#print('Cost Calculation')
+# 'Cost Calculation'
 init_time = start2-start1
 comm_time1 = start3-start2
 comm_time2 = start6-start5
