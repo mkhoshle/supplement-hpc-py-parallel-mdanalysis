@@ -76,7 +76,6 @@ ref0 = mobile
 xref0 = ref0.positions-ref0.center_of_mass()
 
 # Create each segment for each process
-#for j in range(1,6): # changing files (5 files per block size)
 start2 = time.time()
    
 frames_seg = np.zeros([size,2], dtype=int)
@@ -92,6 +91,7 @@ start, stop = d[rank][0], d[rank][1]
 start3 = time.time()
 out = block_rmsd(index, topology, trajectory, xref0, start=start, stop=stop, step=1) 
 
+# Communication
 start4 = time.time()
 if rank == 0:
    data1 = np.zeros([size*bsize,2], dtype=float)
@@ -110,7 +110,7 @@ comm.Gather(np.array(out[1:], dtype=float), data, root=0)
 
 start6 = time.time()
 
-#print('Cost Calculation')
+# Cost Calculation
 init_time = start2-start1
 comm_time1 = start3-start2
 comm_time2 = start5-start4
