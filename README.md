@@ -42,6 +42,6 @@ To have things running efficiently you may need a lot of additional setup depend
 We have provided all the steps required for building the packages and running sample test cases on all the XSEDE resources used in our study. For the cases which the instructions are given on one resource only, the steps have been the same on other resources as well.
 
 # Scripts
-All the scripts for running `RMSD` benchamarks can be found at `Scripts`.
+All the scripts for running `RMSD` benchamarks can be found at `Scripts` directory.
 
 
