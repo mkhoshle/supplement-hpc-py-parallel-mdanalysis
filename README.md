@@ -1,6 +1,12 @@
-# Supplementary Material
+# Supplementary Material for _Parallel Performance of Molecular Dynamics Trajectory Analysis_
 
-Supplementary material (scripts and documentation) for the paper _Guidelines on Obtaining Ideal Performance for Parallel Analysis of Molecular Dynamics Trajectories with Python on HPC Resources_ (see repository https://github.com/hpcanalytics/paper-hpc-py-parallel-mdanalysis).
+[![DOI](https://zenodo.org/badge/146852628.svg)](https://zenodo.org/badge/latestdoi/146852628)
+
+Supplementary material (scripts and documentation) for the paper _Parallel Performance of Molecular Dynamics Trajectory Analysis_, available as preprint [arXiv:1907.00097](https://arxiv.org/abs/1907.00097).
+
+For paper source files and data for figures see repository https://github.com/hpcanalytics/paper-hpc-py-parallel-mdanalysis. Each release of this repository is archived in the Zenodo repository under DOI [10.5281/zenodo.3351616](https://doi.org/10.5281/zenodo.3351616).
+
+# Contents and License
 
 - benchmark scripts
 - notes on setting up the computational environment on the [XSEDE](https://www.xsede.org/) resources discussed in the paper
